@@ -2,7 +2,7 @@ import { ref, watch } from 'vue';
 import { useEthProvider } from './useEthProvider';
 
 export function useMetamask() {
-  const { ethProvider } = useEthProvider(); 
+  const { ethProvider } = useEthProvider();
   const loadedAccounts = ref<string[]>([]);
 
   const requestAccounts = async () => {
