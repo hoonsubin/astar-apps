@@ -29,6 +29,21 @@
       </icon-base>
       Add an existing code hash
     </button>
+     <button
+      type="button"
+      @click="modalDeployEvm = true"
+      class="tw-inline-flex tw-items-center tw-ml-3 tw-px-4 tw-py-2 tw-text-sm tw-font-medium tw-rounded-full tw-shadow-sm tw-text-blue-500 dark:tw-text-blue-400 tw-border tw-border-blue-500 dark:tw-border-blue-400 hover:tw-bg-blue-100 dark:hover:tw-bg-darkGray-800 dark:hover:tw-border-blue-300 dark:hover:tw-text-blue-300 focus:tw-outline-none focus:tw-ring focus:tw-ring-blue-100 dark:focus:tw-ring-blue-400 tw-mb-1 tw-group"
+    >
+      <icon-base
+        class="tw-w-5 tw-h-5 tw-text-blue-500 dark:tw-text-blue-400 tw--ml-1 dark:group-hover:tw-text-blue-300"
+        icon-name="plus"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <icon-plus />
+      </icon-base>
+      Create your Ethereum Dapp
+    </button>
   </div>
 
   <ContractsTable />
@@ -47,6 +62,11 @@
     v-model:isOpen="modalCodeHash"
     :address="currentAccount"
   />
+  <ModalDeployEvm
+    v-if="modalDeployEvm"
+    v-model:isOpen="modalDeployEvm"
+    :address="currentAccount"
+  />
 </template>
 
 <script lang="ts">
@@ -59,10 +79,12 @@ import CodehashTable from './CodehashTable.vue';
 import ContractsTable from './ContractsTable.vue';
 import ModalCreateDapps from './modals/ModalCreateDapps.vue';
 import ModalCodeHash from './modals/ModalCodeHash.vue';
+import ModalDeployEvm from './modals/ModalDeployEvm.vue'
 
 interface Modal {
   modalCreateDapps: boolean;
   modalCodeHash: boolean;
+  modalDeployEvm: boolean;
 }
 
 export default defineComponent({
@@ -71,6 +93,7 @@ export default defineComponent({
     IconBase,
     ModalCreateDapps,
     ModalCodeHash,
+    ModalDeployEvm,
     CodehashTable,
     ContractsTable,
   },
@@ -80,6 +103,7 @@ export default defineComponent({
     const stateModal = reactive<Modal>({
       modalCreateDapps: false,
       modalCodeHash: false,
+      modalDeployEvm: false,
     });
 
     const { allAccounts, allAccountNames, currentAccount } = useAccount();

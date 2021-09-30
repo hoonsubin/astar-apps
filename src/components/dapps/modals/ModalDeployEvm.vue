@@ -42,7 +42,8 @@
                 <input
                   class="tw-border tw-border-gray-300 dark:tw-border-darkGray-500 tw-rounded-md tw-w-full tw-text-blue-900 dark:tw-text-darkGray-100 focus:tw-outline-none tw-placeholder-gray-300 dark:tw-placeholder-darkGray-600 tw-px-3 tw-py-3 tw-appearance-none tw-bg-white dark:tw-bg-darkGray-900"
                   placeholder=""
-                  v-model="deploymentAddress"
+                  :value="address"
+                  disabled
                 />
               </div>
 
@@ -65,13 +66,26 @@
                 >
                   Contract ABI
                 </label>
+                <textarea
+                  class="tw-border tw-border-gray-300 dark:tw-border-darkGray-500 tw-rounded-md tw-w-full tw-text-blue-900 dark:tw-text-darkGray-100 focus:tw-outline-none tw-placeholder-gray-300 dark:tw-placeholder-darkGray-600 tw-px-3 tw-py-3 tw-appearance-none tw-bg-white dark:tw-bg-darkGray-900"
+                  placeholder="[{...}]"
+                  v-model="abi"
+                />
+              </div>
+
+              <!-- <div>
+                <label
+                  class="tw-block tw-text-sm tw-font-medium tw-text-gray-500 dark:tw-text-darkGray-400 tw-mb-2"
+                >
+                  Contract ABI
+                </label>
                 <input-file
                   v-on:dropFile="onDropFile"
                   :file="abiFromFile"
                   :extension="extensionFile"
                 />
-              </div>
-              <contract-info :messages="messages" />
+              </div> -->
+              <!-- <contract-info :messages="messages" /> -->
             </div>
           </div>
         </div>
@@ -100,18 +114,23 @@ import { defineComponent, ref } from 'vue';
 import { useStore } from 'src/store';
 import { stringify } from '@polkadot/util';
 import { useEthProvider } from 'src/hooks/custom-signature/useEthProvider';
-import { useMessages } from 'src/hooks';
-import { useAbi } from 'src/hooks/evm/useAbi';
+import useAbi from 'src/hooks/evm/useAbi';
 import { ethers } from 'ethers';
 // import useAbi from 'src/hooks/useAbi';
 import { useFile, FileState } from 'src/hooks/useFile';
 import InputFile from './InputFile.vue';
-import ContractInfo from './ContractInfo.vue';
+// import ContractInfo from './ContractInfo.vue';
 
 export default defineComponent({
   components: {
-    InputFile,
-    ContractInfo,
+    // InputFile,
+    // ContractInfo,
+  },
+  props: {
+    address: {
+      type: String,
+      required: true,
+    },
   },
   setup(props, { emit }) {
     const closeModal = () => {
@@ -121,26 +140,24 @@ export default defineComponent({
     const store = useStore();
     const { ethProvider } = useEthProvider();
 
-    const { onChangeAbi, onRemoveAbi } = useAbi();
+    // const { abi, onChangeAbi, onRemoveAbi } = useAbi();
 
     const bundleName = ref('');
     const bytecode = ref('');
-    const deploymentAddress = ref('');
+    const abi = ref('');
 
-    const { fileRef: abiFromFile, setFile: setAbiFile } = useFile({
-      onChange: onChangeAbi,
-      onRemove: onRemoveAbi,
-      validate: (file) =>
-        file?.data.subarray(0, 4).toString() === '0,97,115,109',
-    });
+    // const { fileRef: abiFromFile, setFile: setAbiFile } = useFile({
+    //   onChange: onChangeAbi,
+    //   onRemove: onRemoveAbi,
+    //   validate: (file) =>
+    //     file?.data.subarray(0, 4).toString() === '0,97,115,109',
+    // });
 
-    const extensionFile = ['.contract', '.json'];
+    // const extensionFile = ['.abi', '.json'];
 
-    const onDropFile = (fileState: FileState) => {
-      setAbiFile(fileState);
-    };
-
-    const { messages } = useMessages(abi);
+    // const onDropFile = (fileState: FileState) => {
+    //   setAbiFile(fileState);
+    // };    
 
     const deploy = async () => {
       if (!ethProvider.value || !bytecode.value || !bundleName.value || !abi.value) {
@@ -162,29 +179,37 @@ export default defineComponent({
       //   partial: codeJson,
       // });
 
-      const provider = new ethers.providers.Web3Provider(ethProvider.value);
+      try {
+        const provider = new ethers.providers.Web3Provider(ethProvider.value);
+        // const provider = new ethers.providers.JsonRpcProvider('https://rpc.shiden.astar.network')
+        const byteCodeData = bytecode.value.toString();
+        const abiData = JSON.parse(stringify(abi.value.trim())).toString();
+        console.log('bytecode', byteCodeData)
+        console.log('abi', abiData)
 
-      const signer = provider.getSigner();
-      const factory = new ethers.ContractFactory(abi, bytecode.value, signer);
-      const contract = await factory.deploy('hello world');
-      console.log('contract address', contract.address);
+        const signer = provider.getSigner();
+        const factory = new ethers.ContractFactory(abiData, byteCodeData, signer);
+        const contract = await factory.deploy();
+        console.log('contract address', contract.address);
 
-      // wait for contract creation transaction to be mined
-      await contract.deployTransaction.wait();
+        // wait for contract creation transaction to be mined
+        await contract.deployTransaction.wait();
 
-      closeModal();
+        closeModal();
+      } catch (err) {
+        console.error(err);
+      }
     };
 
     return {
       closeModal,
       deploy,
       bundleName,
-      deploymentAddress,
       bytecode,
-      abiFromFile,
-      extensionFile,
-      onDropFile,
-      messages,
+      abi,
+      // abiFromFile,
+      // extensionFile,
+      // onDropFile,
     };
   },
 });

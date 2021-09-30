@@ -9,7 +9,7 @@ export interface FileState {
 }
 
 export default function useAbi() {
-  const abi = ref(null);
+  const abi = ref([]);
   const isAbiError = ref(false);
   const errorText = ref('');
 
@@ -51,6 +51,7 @@ export default function useAbi() {
 
 
   return {
+    abi,
     errorText,
     isAbiError,
     onChangeAbi,
