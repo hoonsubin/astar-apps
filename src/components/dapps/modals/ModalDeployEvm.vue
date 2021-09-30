@@ -180,8 +180,8 @@ export default defineComponent({
       // });
 
       try {
-        const provider = new ethers.providers.Web3Provider(ethProvider.value);
-        // const provider = new ethers.providers.JsonRpcProvider('https://rpc.shiden.astar.network')
+        // const provider = new ethers.providers.Web3Provider(ethProvider.value);
+        const provider = new ethers.providers.WebSocketProvider('wss://rpc.shiden.astar.network')
         const byteCodeData = bytecode.value.toString();
         const abiData = JSON.parse(stringify(abi.value.trim())).toString();
         console.log('bytecode', byteCodeData)
