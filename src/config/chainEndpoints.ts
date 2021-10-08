@@ -10,8 +10,8 @@ interface ChainProvider {
   favicon: string;
   isSupportContract: boolean;
   prefix?: number; // Used in extrinsic transactions, also to determine if a network supports extensic transactions.
-  typeDef: RegistryTypes,
-  key: endpointKey
+  typeDef: RegistryTypes;
+  key: endpointKey;
 }
 
 export enum endpointKey {
@@ -86,6 +86,6 @@ export const providerEndpoints: ChainProvider[] = [
     favicon: 'icons/astar.png',
     isSupportContract: true,
     typeDef: typeDefs.dustyDefinitions,
-    key:endpointKey.CUSTOM
+    key: endpointKey.CUSTOM
   },
 ];

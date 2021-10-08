@@ -34,7 +34,6 @@ import { useMeta } from 'quasar'
 import { providerEndpoints } from 'src/config/chainEndpoints';
 import { opengraphMeta } from 'src/config/opengraph';
 import ApiLoader from 'src/hooks/providers/ApiLoader.vue';
-import Spinner from 'components/common/Spinner.vue';
 import ModalLoading from 'components/common/ModalLoading.vue';
 import AlertBox from 'components/common/AlertBox.vue';
 import Sidebar from 'components/Sidebar.vue';
@@ -44,7 +43,6 @@ export default defineComponent({
   components: {
     DashboardLayout,
     ApiLoader,
-    Spinner,
     ModalLoading,
     AlertBox,
     Sidebar,
