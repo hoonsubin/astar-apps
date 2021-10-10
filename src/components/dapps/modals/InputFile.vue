@@ -5,6 +5,7 @@
   >
     <div class="tw-space-y-1 tw-text-center">
       <icon-base
+        v-if="!$slots.default"
         class="tw-h-12 tw-w-12 tw-mx-auto dark:tw-text-darkGray-100"
         viewBox="0 0 20 20"
         fill="none"
@@ -13,11 +14,14 @@
       >
         <icon-document />
       </icon-base>
+      <slot></slot>
       <div
         v-if="file"
         class="tw-flex tw-text-sm tw-text-gray-500 dark:tw-text-darkGray-400"
       >
-        <div>File : {{ file.name }}</div>
+        <div>
+          {{ $t('dapps.modals.file', { name: file.name}) }}
+        </div>
       </div>
       <div v-else class="tw-flex tw-text-sm tw-text-gray-500 dark:tw-text-darkGray-400">
         <div>
@@ -25,10 +29,12 @@
           <div
             class="tw-relative tw-cursor-pointer tw-rounded-md tw-font-medium tw-text-blue-500 dark:tw-text-blue-400 hover:tw-text-blue-400 dark:hover:tw-text-blue-300 focus-within:tw-ring-offset-none"
           >
-            Upload a file
+            {{ $t('dapps.modals.uploadFile') }}
           </div>
-          <p v-if="isDragActive">Drop the files here ...</p>
-          <p class="tw-pl-1" v-else>or drag and drop</p>
+          <p v-if="isDragActive">
+            {{ $t('dapps.modals.dropFile') }}
+          </p>
+          <p class="tw-pl-1" v-else>{{ $t('dapps.modals.orDrag') }}</p>
         </div>
       </div>
     </div>
@@ -102,6 +108,7 @@ export default defineComponent({
               data,
               name: file.name,
               size: data.length,
+              type: file.type
             };
 
             emit('drop-file', fileState);

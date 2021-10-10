@@ -36,7 +36,6 @@
             : 'inactiveLink',
         ]"
         class="tw-items-center tw-justify-center"
-        style="height: 104px"
       >
         <icon-base
           :class="[
@@ -49,7 +48,9 @@
           <icon-balance />
         </icon-base>
         <span class="tw-ml-3 tw-flex-1">
-          <p class="tw-font-bold">Balance</p>
+          <p class="tw-font-bold">
+              {{ $t('balance.balance') }}
+          </p>
           <!-- <p
             class="tw-text-xs tw-text-blue-900 dark:tw-text-darkGray-100 tw-font-semibold tw-flex tw-justify-between"
           >
@@ -62,7 +63,7 @@
       </router-link>
 
       <router-link
-        v-if="isSupportContract"
+        v-if="network.isSupportContract"
         to="/dapps"
         :class="[
           $route.path.split('/')[1] === 'dapps' ? 'activeLink' : 'inactiveLink',
@@ -76,7 +77,29 @@
         >
           <icon-dapps />
         </icon-base>
-        <span class="tw-font-bold tw-ml-3 tw-flex-1">dApps</span>
+        <span class="tw-font-bold tw-ml-3 tw-flex-1">
+          {{ $t('common.dApps') }}
+        </span>
+      </router-link>
+
+      <router-link
+        v-if="network.isStoreEnabled"
+        to="/store"
+        :class="[
+          $route.path.split('/')[1] === 'store' ? 'activeLink' : 'inactiveLink',
+        ]"
+      >
+        <icon-base
+          :class="[
+            $route.path.split('/')[1] === 'store' ? 'activeSvg' : 'inactiveSvg',
+          ]"
+          viewBox="0 0 24 24"
+        >
+          <icon-store />
+        </icon-base>
+        <span class="tw-font-bold tw-ml-3 tw-flex-1">
+            {{ $t('common.store') }}
+        </span>
       </router-link>
 
       <a
@@ -100,7 +123,9 @@
         >
           <icon-dot-lockdrop />
         </icon-base>
-        <span class="tw-ml-3 tw-flex-1">Plasm Lockdrop</span>
+        <span class="tw-ml-3 tw-flex-1">
+          {{ $t('common.plasmLockdrop') }}
+        </span>
       </a>
     </nav>
   </div>
@@ -109,7 +134,10 @@
     class="tw-flex-shrink-0 tw-p-4 tw-border-t tw-border-gray-200 dark:tw-border-darkGray-600"
   >
     <SocialMediaLinks />
+    <div class="tw-flex tw-items-center tw-justify-center">
     <LightDarkMode />
+    <locale-changer />
+    </div>
   </div>
 
   <!-- Modals -->
@@ -136,19 +164,22 @@ import IconDapps from '../icons/IconDapps.vue';
 import IconDotLockdrop from '../icons/IconDotLockdrop.vue';
 import IconBalance from '../icons/IconBalance.vue';
 import IconSolidChevronDown from '../icons/IconSolidChevronDown.vue';
+import IconStore from '../icons/IconStore.vue'
 import ModalNetwork from 'src/components/balance/modals/ModalNetwork.vue';
+import LocaleChanger from './LocaleChanger.vue'
 
 export default defineComponent({
   components: {
     ConnectionIndicator,
     ExtensionsMetadata,
     SocialMediaLinks,
-    LightDarkMode,
+    LightDarkMode,LocaleChanger,
     IconBase,
     IconDapps,
     IconDotLockdrop,
     IconBalance,
     IconSolidChevronDown,
+    IconStore,
     ModalNetwork,
   },
   setup() {
@@ -185,8 +216,8 @@ export default defineComponent({
     });
 
     const isLocalChain = currentNetworkIdx.value === endpointKey.LOCAL;
-    const isSupportContract = ref(
-      providerEndpoints[currentNetworkIdx.value].isSupportContract
+    const network = ref(
+      providerEndpoints[currentNetworkIdx.value]
     );
 
     return {
@@ -198,7 +229,7 @@ export default defineComponent({
       currentNetworkIdx,
       currentNetworkName,
       isLocalChain,
-      isSupportContract,
+      network,
     };
   },
 });

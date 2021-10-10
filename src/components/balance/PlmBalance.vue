@@ -12,15 +12,15 @@
           </icon-base>
         </div>
         <p class="tw-text-blue-900 dark:tw-text-darkGray-100 tw-font-bold tw-text-lg">
-          {{ defaultUnitToken }} Balance
+          {{ defaultUnitToken }} {{ $t('balance.balance') }}
         </p>
       </div>
 
-      <div class="tw-flex tw-justify-center tw-mt-4 sm:tw-mt-8 lg:tw-mt-6">
+      <div class="tw-flex tw-justify-center tw-mt-4 lg:tw-mt-6">
         <div>
           <p class="tw-font-semibold tw-text-center">
             <span class="tw-text-4xl tw-tracking-tight tw-leading-tight"
-              ><format-balance
+              ><format-balance :balance="accountData?.free"
             /></span>
           </p>
         </div>
@@ -34,7 +34,7 @@
           class="tw-inline-flex tw-items-center tw-px-4 tw-py-2 tw-border tw-border-transparent tw-text-sm tw-font-medium tw-rounded-full tw-shadow-sm tw-text-white tw-bg-blue-500 hover:tw-bg-blue-400 focus:tw-outline-none focus:tw-ring focus:tw-ring-blue-100 dark:focus:tw-ring-blue-400 tw-mx-0.5"
           :class="!address ? 'disabled_btn' : ''"
         >
-          Transfer
+          {{ $t('balance.transfer') }}
         </button>
       </div>
     </div>
@@ -43,10 +43,10 @@
       <div
         class="tw-flex tw-justify-between tw-items-center tw-bg-blue-50 dark:tw-bg-darkGray-700 tw-rounded-lg tw-mb-2 tw-py-3 tw-px-4"
       >
-        <div>Transferable</div>
+        <div> {{ $t('balance.transferable') }}</div>
         <div>
           <p class="tw-font-bold tw-text-right">
-            <span class="tw-text-2xl tw-leading-tight"><format-balance /></span>
+            <span class="tw-text-2xl md:tw-text-xl xl:tw-text-2xl tw-leading-tight"><format-balance :balance="accountData?.getUsableTransactionBalance()" /></span>
           </p>
         </div>
       </div>
@@ -54,7 +54,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, toRefs } from 'vue';
 import { useChainMetadata } from 'src/hooks';
 import IconBase from 'components/icons/IconBase.vue';
 import IconAccountSample from 'components/icons/IconAccountSample.vue';
@@ -71,6 +71,10 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    accountData: {
+      type: Object,
+      required: true
+    }
   },
   setup(props, { emit }) {
     const openTransferModal = (): void => {
@@ -82,6 +86,7 @@ export default defineComponent({
     return {
       openTransferModal,
       defaultUnitToken,
+      ...toRefs(props)
     };
   },
 });

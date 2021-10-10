@@ -12,6 +12,7 @@ interface ChainProvider {
   prefix?: number; // Used in extrinsic transactions, also to determine if a network supports extensic transactions.
   typeDef: RegistryTypes;
   key: endpointKey;
+  isStoreEnabled: boolean;
 }
 
 export enum endpointKey {
@@ -32,43 +33,44 @@ export const providerEndpoints: ChainProvider[] = [
     favicon: 'icons/astar.png',
     isSupportContract: false,
     typeDef: typeDefs.plasmDefinitions,
-    key: endpointKey.PLASM
+    key: endpointKey.PLASM,
+    isStoreEnabled: false,
   },
   {
     networkAlias: 'shiden-shell',
     displayName: 'Shiden Network (Kusama)',
-    info:
-      'Smart contract platform for decentralized applications (dapps) on the Kusama network',
+    info: 'Smart contract platform for decentralized applications (dapps) on the Kusama network',
     endpoint: 'wss://rpc.shiden.astar.network',
     fallback: 'wss://shiden.api.onfinality.io/public-ws',
     favicon: 'icons/shiden.png',
     isSupportContract: true,
     prefix: 0x150,
     typeDef: typeDefs.plasmCollatorDefinitions,
-    key: endpointKey.SHIDEN
+    key: endpointKey.SHIDEN,
+    isStoreEnabled: false,
   },
   {
     networkAlias: 'dusty-testnet',
     displayName: 'Dusty Network (Testnet)',
-    info:
-      'The test network of the layer 2 scaling blockchain, Dusty Plasm Network',
+    info: 'The test network of the layer 2 scaling blockchain, Dusty Plasm Network',
     endpoint: 'wss://dusty.astar.network',
     favicon: 'https://polkadot.js.org/apps/static/dusty.16cf115c.png',
     isSupportContract: true,
     typeDef: typeDefs.dustyDefinitions,
-    key: endpointKey.DUSTY
+    key: endpointKey.DUSTY,
+    isStoreEnabled: false,
   },
   {
     networkAlias: 'shibuya-testnet',
     displayName: 'Shibuya Network (Testnet)',
-    info:
-      'The test network of the layer 2 scaling blockchain',
+    info: 'The test network of the layer 2 scaling blockchain',
     endpoint: 'wss://rpc.shibuya.astar.network',
     favicon: 'https://polkadot.js.org/apps/static/shiden.a066789e.png',
     isSupportContract: true,
     prefix: 0xff51,
     typeDef: typeDefs.plasmCollatorDefinitions,
-    key: endpointKey.SHIBUYA
+    key: endpointKey.SHIBUYA,
+    isStoreEnabled: true,
   },
   {
     networkAlias: 'local-node',
@@ -76,8 +78,9 @@ export const providerEndpoints: ChainProvider[] = [
     endpoint: 'ws://127.0.0.1:9944',
     favicon: 'icons/astar.png',
     isSupportContract: true,
-    typeDef: typeDefs.dustyDefinitions,
-    key: endpointKey.LOCAL
+    typeDef: typeDefs.plasmCollatorDefinitions,
+    key: endpointKey.LOCAL,
+    isStoreEnabled: true,
   },
   {
     networkAlias: 'custom-node',
@@ -86,6 +89,7 @@ export const providerEndpoints: ChainProvider[] = [
     favicon: 'icons/astar.png',
     isSupportContract: true,
     typeDef: typeDefs.dustyDefinitions,
-    key: endpointKey.CUSTOM
+    key: endpointKey.CUSTOM,
+    isStoreEnabled: false,
   },
 ];
